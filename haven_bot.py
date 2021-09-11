@@ -11,6 +11,7 @@ ADDRESS = (os.getenv('SERVER_IP'), int(os.getenv('RCON_PORT')))
 PASSWORD = os.getenv('RCON_PASSWORD')
 
 bot = commands.Bot(command_prefix='!')
+#add command catagories
 
 @bot.command(name='clist', help='shows the rcon command list')
 @commands.has_role('Admin')
@@ -111,6 +112,7 @@ async def length_handler(message, ctx):
     await ctx.channel.send(f'```{message}```')
 
 def rcon_run(command):
+    #add disconnetion to address timeout issue?
     try:
         rcon = valve.rcon.RCON(ADDRESS, PASSWORD)
         rcon.connect()
