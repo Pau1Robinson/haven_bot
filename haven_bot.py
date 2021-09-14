@@ -71,29 +71,30 @@ async def list_bans(ctx, *, message:str):
 
 @bot.command(name='ban', help='bans player from the server format !ban <identifer type(index|name|userid|platformid|player)> <player> <message>')
 @commands.has_role('Admin')
-async def list_bans(ctx, identifier:str, player:str, *, message:str=''):
-    response = rcon_run(f'Banplayer {identifier} {player} {message}')
+async def list_bans(ctx, *, command:str=''):
+    #fix spaces in name parameter issues
+    response = rcon_run(f'Banplayer {command}')
     response_text = response.body.decode("utf-8")
     await length_handler(response_text, ctx)
 
 @bot.command(name='unban', help='unbans player from the server format !ban <userid/steamid>')
 @commands.has_role('Admin')
-async def list_bans(ctx, player:str):
+async def list_bans(ctx, *, player:str):
     response = rcon_run(f'unbanplayer {player}')
     response_text = response.body.decode("utf-8")
     await length_handler(response_text, ctx)
 
 @bot.command(name='kick', help='kicks player from the server format !ban <identifer type(index|name|userid|platformid|player)> <player> <message>')
 @commands.has_role('Admin')
-async def list_bans(ctx, identifier:str, player:str, *, message:str=''):
-    response = rcon_run(f'kickplayer {identifier} {player} {message}')
+async def list_bans(ctx, *, command:str):
+    response = rcon_run(f'kickplayer {command}')
     response_text = response.body.decode("utf-8")
     await length_handler(response_text, ctx)
 
 @bot.command(name='console', help='Runs a Conan console command !console <target player> <command> <args>')
 @commands.has_role('Admin')
-async def list_bans(ctx, player:str, command:str, *, args:str=''):
-    response = rcon_run(f'con {player} {command} {args}')
+async def list_bans(ctx, *, command:str,):
+    response = rcon_run(f'con {command}')
     response_text = response.body.decode("utf-8")
     await length_handler(response_text, ctx)
 
