@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 
 from cogs.general import  General
 from cogs.queries import Queries
-from cogs.admin import Admin
+from cogs.rcon import Rcon
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -23,7 +23,8 @@ async def length_handler(message, ctx):
         message = message[split:len(message)]
     await ctx.channel.send(f'```{message}```')
 
-def rcon_run(command):
+def rcon_run(ctx, command):
+    print(f'!{ctx.invoked_with} Ran:{command[0 : 25]} User:{ctx.author.display_name}#{ctx.author.discriminator} Server:{ctx.guild.name}')
     try:
         rcon = valve.rcon.RCON(ADDRESS, PASSWORD)
         rcon.connect()
@@ -39,7 +40,7 @@ def rcon_run(command):
 
 bot.add_cog(General(bot, rcon_run, length_handler))
 bot.add_cog(Queries(bot, rcon_run, length_handler))
-bot.add_cog(Admin(bot, rcon_run, length_handler))
+bot.add_cog(Rcon(bot, rcon_run, length_handler))
 
 print('Haven bot online')
 bot.run(TOKEN)
