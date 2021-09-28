@@ -1,3 +1,4 @@
+import discord
 from discord.ext import commands
 
 class General (commands.Cog):
@@ -8,11 +9,16 @@ class General (commands.Cog):
         self.length_handler = length_handler
         bot.help_command.cog = self
     
+    # make the player steamids a link to their profile?
     @commands.command(name='players', help='shows the server player list')
     @commands.has_role('Admin')
     async def players(self, ctx):
         response = self.rcon_run(ctx, 'listplayers')
         response_text = response.body.decode("utf-8")
+        response_text = self.steam_embedder(response_text)
+        # embed = discord.Embed()
+        # embed.description = response_text
+        # await ctx.channel.send(embed=embed)
         await self.length_handler(response_text, ctx)
     
     @commands.command(name='broadcast', help='sends a message to the server')
@@ -49,3 +55,18 @@ class General (commands.Cog):
         response = self.rcon_run(ctx, 'listbans')
         response_text = response.body.decode("utf-8")
         await self.length_handler(response_text, ctx)
+    
+    def steam_embedder(self, message):
+        #changes playerlist steam id's into steamlinks
+        list = message.split('|')
+        for i, string in enumerate(list):
+            if string.find('Steam') == True:
+                string = list[i-1]
+                string = string.strip()
+                string = f' [{string}](\'https://steamcommunity.com/profiles/{string}/\') '
+                list[i-1] = string
+        message = ' '.join(list)
+
+
+        return message
+
