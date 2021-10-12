@@ -16,12 +16,12 @@ PASSWORD = os.getenv('RCON_PASSWORD')
 
 bot = commands.Bot(command_prefix='!')
 
-async def length_handler(message, ctx):
+async def length_handler(message, ctx, delete_time=None):
     while len(message) > 1900:
         split = message.rfind('\n', 0, 1900)
-        await ctx.channel.send(f'```{message[0:split+1]}```')
+        await ctx.channel.send(f'```{message[0:split+1]}```', delete_after=delete_time)
         message = message[split:len(message)]
-    await ctx.channel.send(f'```{message}```')
+    await ctx.channel.send(f'```{message}```', delete_after=delete_time)
 
 def rcon_run(ctx, command):
     print(f'!{ctx.invoked_with} Ran:{command[0 : 25]} User:{ctx.author.display_name}#{ctx.author.discriminator} Server:{ctx.guild.name}')

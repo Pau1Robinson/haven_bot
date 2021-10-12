@@ -1,4 +1,5 @@
 import discord
+import asyncio
 from discord.ext import commands
 
 class General (commands.Cog):
@@ -7,6 +8,7 @@ class General (commands.Cog):
         self.bot = bot
         self.rcon_run = rcon_run
         self.length_handler = length_handler
+        self.player_lists_run = True
         bot.help_command.cog = self
     
     # make the player steamids a link to their profile?
@@ -15,11 +17,28 @@ class General (commands.Cog):
     async def players(self, ctx):
         response = self.rcon_run(ctx, 'listplayers')
         response_text = response.body.decode("utf-8")
-        response_text = self.steam_embedder(response_text)
+        # response_text = self.steam_embedder(response_text)
         # embed = discord.Embed()
         # embed.description = response_text
         # await ctx.channel.send(embed=embed)
         await self.length_handler(response_text, ctx)
+    
+    @commands.command(name='playerlist', help='shows a auto updating player list')
+    @commands.has_role('Admin')
+    async def playerlist(self, ctx):
+        self.player_lists_run = True
+        while self.player_lists_run == True:
+            response = self.rcon_run(ctx, 'listplayers')
+            response_text = response.body.decode("utf-8")
+            await self.length_handler(response_text, ctx, delete_time=60)
+            await asyncio.sleep(60)
+
+    @commands.command(name='stoplists', help='stop all repeating playerlists')
+    @commands.has_role('Admin')
+    async def stop_playerlists(self, ctx):
+        self.player_lists_run = False
+        response = 'stopped all running playerlists'
+        await self.length_handler(response, ctx)
     
     @commands.command(name='broadcast', help='sends a message to the server')
     @commands.has_role('Admin')
@@ -58,6 +77,7 @@ class General (commands.Cog):
     
     def steam_embedder(self, message):
         #changes playerlist steam id's into steamlinks
+        #discord currently doesn't allow embeds in this way
         list = message.split('|')
         for i, string in enumerate(list):
             if string.find('Steam') == True:
@@ -66,7 +86,26 @@ class General (commands.Cog):
                 string = f' [{string}](\'https://steamcommunity.com/profiles/{string}/\') '
                 list[i-1] = string
         message = ' '.join(list)
-
-
         return message
+
+class PlayerList():
+
+    def __init__(self, rcon_run, ctx):
+        player_list = ""
+        ctx = self.ctx
+        rcon_run = self.rcon_run
+    
+    def get_players(self):
+        response = self.rcon_run(self.ctx, 'listplayers')
+        response_text = response.body.decode("utf-8")
+        return response_text
+
+    def length_list(self, message):
+        message_list = []
+        while len(message) > 1900:
+            split = message.rfind('\n', 0, 1900)
+            message_list.append(f'```{message[0:split+1]}```')
+            message = message[split:len(message)]
+        message_list.append(f'```{message}```')
+        return message_list
 
