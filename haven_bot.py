@@ -36,7 +36,11 @@ def rcon_run(ctx, command):
         response = 'rcon connection failed'
     except valve.rcon.RCONAuthenticationError:
         response = 'rcon authentication failed'
-    return response
+    if hasattr(response, 'body'):
+        response_text = response.body.decode("utf-8")
+        return response_text
+    else:
+        return 'RCON returned an empty response'
 
 bot.add_cog(General(bot, rcon_run, length_handler))
 bot.add_cog(Queries(bot, rcon_run, length_handler))

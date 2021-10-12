@@ -17,26 +17,22 @@ class Queries (commands.Cog):
     @commands.has_role('Admin')
     async def buildings(self, ctx):
         response = self.rcon_run(ctx, self.sql_run('buildings'))
-        response_text = response.body.decode("utf-8")
-        await self.length_handler(response_text, ctx)
+        await self.length_handler(response, ctx)
     
     @commands.command(name='placeables', help='shows a list of each clans placeables')
     @commands.has_role('Admin')
     async def placeables(self, ctx):
         response = self.rcon_run(ctx, self.sql_run('placeables'))
-        response_text = response.body.decode("utf-8")
-        await self.length_handler(response_text, ctx)
+        await self.length_handler(response, ctx)
     
     @commands.command(name='blocks', help='shows a list of single block foundations')
     @commands.has_role('Admin')
     async def blocks(self, ctx):
         response = self.rcon_run(ctx, self.sql_run('blocks'))
-        response_text = response.body.decode("utf-8")
-        await self.length_handler(response_text, ctx)
+        await self.length_handler(response, ctx)
     
     @commands.command(name='chars', help='shows a list of all characters')
     @commands.has_role('Admin')
     async def chars(self, ctx):
         response = self.rcon_run(ctx, self.sql_run('chars'))
-        response_text = response.body.decode("utf-8")
-        await self.length_handler(response_text, ctx)
+        await self.length_handler(response, ctx)

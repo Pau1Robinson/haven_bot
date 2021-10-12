@@ -11,19 +11,16 @@ class Rcon (commands.Cog):
     @commands.has_role('Admin')
     async def rcon(self, ctx, *, command):
         response = self.rcon_run(ctx, f'{command}')
-        response_text = response.body.decode("utf-8")
-        await self.length_handler(response_text, ctx)
+        await self.length_handler(response, ctx)
 
     @commands.command(name='clist', help='shows the rcon command list')
     @commands.has_role('Admin')
     async def clist(self, ctx):
         response = self.rcon_run(ctx, 'help')
-        response_text = response.body.decode("utf-8")
-        await self.length_handler(response_text, ctx)
+        await self.length_handler(response, ctx)
 
     @commands.command(name='console', help='Runs a Conan console command !console <target player> <command> <args>')
     @commands.has_role('Admin')
     async def console(self, ctx, *, command:str,):
         response = self.rcon_run(ctx, f'con {command}')
-        response_text = response.body.decode("utf-8")
-        await self.length_handler(response_text, ctx)
+        await self.length_handler(response, ctx)
