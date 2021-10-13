@@ -23,8 +23,9 @@ async def length_handler(message, ctx, delete_time=None):
         message = message[split:len(message)]
     await ctx.channel.send(f'```{message}```', delete_after=delete_time)
 
-def rcon_run(ctx, command):
-    print(f'!{ctx.invoked_with} Ran:{command[0 : 25]} User:{ctx.author.display_name}#{ctx.author.discriminator} Server:{ctx.guild.name}')
+def rcon_run(ctx, command, log=True):
+    if log ==True:
+        print(f'!{ctx.invoked_with} Ran:{command[0 : 25]} User:{ctx.author.display_name}#{ctx.author.discriminator} Server:{ctx.guild.name}')
     try:
         rcon = valve.rcon.RCON(ADDRESS, PASSWORD)
         rcon.connect()

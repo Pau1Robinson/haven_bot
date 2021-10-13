@@ -22,13 +22,14 @@ class General (commands.Cog):
         # await ctx.channel.send(embed=embed)
         await self.length_handler(response, ctx)
     
-    @commands.command(name='playerlist', help='shows a auto updating player list')
+    @commands.command(name='playerlist', help='shows an auto updating player list')
     @commands.has_role('Admin')
     async def playerlist(self, ctx):
         self.player_lists_run = True
         previous_list = ''
+        print(f'!{ctx.invoked_with} Ran:playerlist User:{ctx.author.display_name}#{ctx.author.discriminator} Server:{ctx.guild.name}')
         while self.player_lists_run == True:
-            response = self.rcon_run(ctx, 'listplayers')
+            response = self.rcon_run(ctx, 'listplayers', log=False)
             if response != 'RCON returned an empty response':    
                 await self.length_handler(response, ctx, delete_time=60)
                 previous_list = response
