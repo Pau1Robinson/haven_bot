@@ -84,10 +84,10 @@ def add_players_db(response):
         for response_player in response[1:]:
             response_player = response_player.split('|')
             players = Player.objects()
-            if not Player(server_id=response_player[3]) in players:
-                player = Player(char_name=response_player[1],funcom_id=response_player[2],server_id=response_player[3],platform_id=response_player[4],platform_name=response_player[5])
+            player = Player(char_name=response_player[1].strip(),funcom_id=response_player[2].strip(),server_id=response_player[3].strip(),platform_id=response_player[4].strip(),platform_name=response_player[5].strip())
+            if not player in players:
                 player.save()
-                print(f'added player {response_player[2]} to DB')
+                print(f'added player {response_player[2].strip()} to DB')
 
 @bot.event
 async def on_ready():
